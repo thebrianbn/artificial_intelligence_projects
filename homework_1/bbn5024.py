@@ -31,9 +31,11 @@ statically typed language:
 
 python_concepts_question_2 = """
 The problem is that lists are mutable objects, resulting in issues with having
-a list when being used as a key to a dictionary object. A solution to this
-problem would be to use tuples as the coordinates, as tuples are immutable
-objects.
+a list when being used as a key to a dictionary object. When a key is hashed in
+a dictionary, it gets a unique hash to that key. If that key is changed, the
+hash changes, resulting in the inability to retrieve the value for that key. 
+A solution to this problem would be to use tuples as the coordinates, as
+tuples are immutable objects.
 """
 
 python_concepts_question_3 = """
@@ -146,13 +148,11 @@ def digits_to_words(text):
     " ".join([digit_dict[char] for char in text if char in digit_dict])
 
 def to_mixed_case(name):
-    """ Converts a variable name from the former convention to the latter. """
+    """ Converts a variable name from underscore to mixed case. """
 
-    if "_" in name:
-        temp = name.replace("_", " ").split()
-        return temp
-
-    # TODO: camelcase to underscore
+    name = name.replace("_", " ").lower().split()
+    name[1:] = map(lambda x: x[0].upper() + x[1:], name[1:])
+    return "".join(name)
 
 ############################################################
 # Section 6: Polynomials
@@ -213,17 +213,30 @@ class Polynomial(object):
         poly_str = []
         first = True
         for pair in self.polynomial:
-            if not first:
+            if not first:  # Throw away sign and append operator if not first
                 if pair[0] < 0:
                     poly_str.append("-")
                 else:
                     poly_str.append("+")
-            if pair[1] == 0:
-                poly_str.append(str(pair[0]))
-            elif pair[1] == 1:
-                poly_str.append("%dx" % pair[0])
+                pair = (abs(pair[0]), pair[1])
+            if pair[0] == 1 or pair[0] == -1:  # Throw away 1s
+                if pair[0] == 1:
+                    sign = ""
+                else:
+                    sign = "-"
+                if pair[1] == 0:
+                    poly_str.append(str(pair[0]))
+                elif pair[1] == 1:
+                    poly_str.append("%sx" % sign)
+                else:
+                    poly_str.append("%sx^%d" % (sign, pair[1]))
             else:
-                poly_str.append("%dx^%d" % (pair[0], pair[1]))
+                if pair[1] == 0:
+                    poly_str.append(str(pair[0]))
+                elif pair[1] == 1:
+                    poly_str.append("%dx" % pair[0])
+                else:
+                    poly_str.append("%dx^%d" % (pair[0], pair[1]))
             first = False
 
         return " ".join(poly_str)
@@ -233,7 +246,7 @@ class Polynomial(object):
 ############################################################
 
 feedback_question_1 = """
-I spent approximately 2.5 hours.
+I spent approximately 3.5 hours.
 """
 
 feedback_question_2 = """
