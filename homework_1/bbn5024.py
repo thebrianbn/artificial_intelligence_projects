@@ -59,7 +59,7 @@ def concatenate(seqs):
     """ Returns a list containing the concatenation of the elements of the
     input sequences. """
 
-    return [x for x in seq for seq in seqs]
+    return [x for seq in seqs for x in seq]
 
 def transpose(matrix):
     """ Returns the transpose of the input matrix, which is represented as a
@@ -145,7 +145,7 @@ def digits_to_words(text):
                   "8": "eight",
                   "9": "nine"}
 
-    " ".join([digit_dict[char] for char in text if char in digit_dict])
+    return " ".join([digit_dict[char] for char in text if char in digit_dict])
 
 def to_mixed_case(name):
     """ Converts a variable name from underscore to mixed case. """
