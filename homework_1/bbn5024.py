@@ -126,7 +126,7 @@ def normalize(text):
 def no_vowels(text):
     """ Removes all vowels from the input string and returns the result. """
 
-    vowels = ["a", "e", "i", "o", "u"]
+    vowels = ("a", "e", "i", "o", "u")
     return "".join([char for char in text if char.lower() not in vowels])
 
 def digits_to_words(text):
@@ -178,11 +178,8 @@ class Polynomial(object):
         return Polynomial(self.polynomial + (-other).get_polynomial())
 
     def __mul__(self, other):
-        new_poly = []
-        for pair1 in self.polynomial:
-            for pair2 in other.get_polynomial():
-                new_poly.append((pair1[0] * pair2[0], pair1[1] + pair2[1]))
-        return Polynomial(new_poly)
+        return Polynomial([(pair1[0] * pair2[0], pair1[1] + pair2[1]) for \
+            pair1 in self.polynomial for pair2 in other.get_polynomial()])
 
     def __call__(self, x):
         return sum((pair[0] * x ** pair[1]) for pair in self.polynomial)
@@ -191,13 +188,13 @@ class Polynomial(object):
         new_poly = []
 
         # Combine terms with common power
-        for pair1 in self.polynomial:
+        for pair in self.polynomial:
             for x in range(len(new_poly)):
-                if pair1[1] == new_poly[x][1]:
-                    new_poly[x] = (pair1[0] + new_poly[x][0], pair1[1])
+                if pair[1] == new_poly[x][1]:
+                    new_poly[x] = (pair[0] + new_poly[x][0], pair[1])
                     break
             else:
-                new_poly.append(pair1)
+                new_poly.append(pair)
 
         # Remove terms with coefficient of 0
         for pair in new_poly:
