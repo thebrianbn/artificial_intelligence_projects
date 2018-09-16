@@ -185,13 +185,17 @@ def solve_identical_disks(length, n):
     # While the queue isn't empty, enqueue adjacent disks of current
     # For this one, it's never a need for a disk to go backwards
     while not q.empty():
+        # Retrieve next state from queue
         moves, current = q.get()
+        # Check if goal state is reached
         if sum(current[length - n:]) == n:
             return moves
+        # Check if state is already visited
         if current in visited:
             continue
         else:
             visited.append(current)
+        # Enqueue all possible moves
         for i in range(length - 1):
             if current[i + 1] == 0 and current[i] == 1:
                 one_hop = deepcopy(current)
@@ -201,13 +205,15 @@ def solve_identical_disks(length, n):
                 new_moves1.append((i, i + 1))
                 q.put((new_moves1, one_hop))
             if length - i != 2:  # Prevent index error
-                if current[i + 2] == 0 and current[i + 1] == 1 and current[i] == 1:
+                if current[i + 2] == 0 and current[i + 1] == 1 and \
+                current[i] == 1:
                     two_hop = deepcopy(current)
                     two_hop[i] = 0
                     two_hop[i + 2] = 1
                     new_moves2 = deepcopy(moves)
                     new_moves2.append((i, i + 2))
                     q.put((new_moves2, two_hop))
+    # If no possible moves left, return None
     return None
 
 
@@ -228,14 +234,18 @@ def solve_distinct_disks(length, n):
 
     # While the queue isn't empty, enqueue adjacent disks of current
     while not q.empty():
+        # Retrieve next state from queue
         moves, current = q.get()
-        if sorted(current[length - n:], reverse=True) == current[length - n:] and 0 not in current[length - n:]:
-            print current
+        # Check if goal state is reached
+        if sorted(current[length - n:], reverse=True) == current[length - n:] and \
+        0 not in current[length - n:]:
             return moves
+        # Check if state is already visited
         if current in visited:
             continue
         else:
             visited.append(current)
+        # Enqueue all possible moves
         for i in range(length):
             if i < length - 1:
                 if current[i + 1] == 0 and current[i] != 0:
@@ -247,7 +257,8 @@ def solve_distinct_disks(length, n):
                     new_moves1.append((i, i + 1))
                     q.put((new_moves1, one_hop))
             if i < length - 2:  # Prevent index error
-                if current[i + 2] == 0 and current[i + 1] != 0 and current[i] != 0:
+                if current[i + 2] == 0 and current[i + 1] != 0 and \
+                current[i] != 0:
                     two_hop = deepcopy(current)
                     temp = two_hop[i]
                     two_hop[i] = 0
@@ -265,7 +276,8 @@ def solve_distinct_disks(length, n):
                     new_moves3.append((i, i - 1))
                     q.put((new_moves3, one_back))
             if i > 1:
-                if current[i - 2] == 0 and current[i - 1] != 0 and current[i] != 0:
+                if current[i - 2] == 0 and current[i - 1] != 0 and \
+                current[i] != 0:
                     two_back = deepcopy(current)
                     temp = two_back[i]
                     two_back[i] = 0
@@ -273,6 +285,7 @@ def solve_distinct_disks(length, n):
                     new_moves4 = deepcopy(moves)
                     new_moves4.append((i, i - 2))
                     q.put((new_moves4, two_back))
+    # If no possible moves left, return None
     return None
 
 ############################################################
