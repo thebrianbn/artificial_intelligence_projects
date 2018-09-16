@@ -1,7 +1,7 @@
 import sys
 import Tkinter
 
-import homework2
+import bbn5024
 
 class Light(Tkinter.Canvas):
 
@@ -76,7 +76,7 @@ class LightsOutGUI(Tkinter.Frame):
 
         Tkinter.Frame.__init__(self, master)
 
-        self.puzzle = homework2.create_puzzle(rows, cols)
+        self.puzzle = bbn5024.create_puzzle(rows, cols)
 
         self.board = Board(self, self.puzzle, rows, cols)
         self.board.pack(side=Tkinter.LEFT, padx=1, pady=1)
