@@ -18,6 +18,8 @@ def test_section_1():
 	assert_equals(next(solutions), [1, 3, 0, 2])
 	assert_equals(next(solutions), [2, 0, 3, 1])
 	assert_equals(len(list(n_queens_solutions(8))), 92)
+	print(list(n_queens_solutions(6)))
+	assert_equals(len(list(n_queens_solutions(6))), 4)
 	assert_equals(list(n_queens_solutions(6)), [[1, 3, 5, 0, 2, 4], [2, 5, 1, 4, 0, 3],
  				  [3, 0, 4, 1, 5, 2], [4, 2, 0, 5, 3, 1]])
 

@@ -175,11 +175,7 @@ def solve_identical_disks(length, n):
     state = []
 
     # Create initial state as an array of 1s and 0s, put into queue
-    for i in range(length):
-        if i < n:
-            state.append(1)
-        else:
-            state.append(0)
+    state = [1 if i < n else 0 for i in range(length)]
     q.put(([], state))
 
     # While the queue isn't empty, enqueue adjacent disks of current
@@ -222,14 +218,9 @@ def solve_distinct_disks(length, n):
     # Initial data structures
     q = Queue()
     visited = []
-    state = []
 
     # Create initial state as an array of 1s and 0s, put into queue
-    for i in range(1, length + 1):
-        if i < n + 1:
-            state.append(i)
-        else:
-            state.append(0)
+    state = [i if i < n + 1 else 0 for i in range(1, length + 1)]
     q.put(([], state))
 
     # While the queue isn't empty, enqueue adjacent disks of current
