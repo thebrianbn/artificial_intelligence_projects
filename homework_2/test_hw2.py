@@ -84,19 +84,21 @@ def test_section_2():
 
 
 def test_section_3():
-	print("Testing: solving_identical_disks")
-	print(solve_identical_disks(4, 2))
-	print(solve_identical_disks(5, 2))
-	print(solve_identical_disks(4, 3))
-	print(solve_identical_disks(5, 3))
 
-	print("Testing: solving_distinct_disks")
-	print(solve_distinct_disks(4, 2))
-	print(solve_distinct_disks(5, 2))
-	print(solve_distinct_disks(4, 3))
-	print(solve_distinct_disks(5, 3))
+	assert_equals(solve_identical_disks(4, 2), [(0, 2), (1, 3)])
+	assert_equals(solve_identical_disks(5, 2), [(0, 2), (1, 3), (2, 4)])
+	assert_equals(solve_identical_disks(4, 3), [(1, 3), (0, 1)])
+	assert_equals(solve_identical_disks(5, 3), [(1, 3), (0, 1), (2, 4), (1, 2)])
+
+	assert_equals(solve_distinct_disks(4, 2), [(0, 2), (2, 3), (1, 2)])
+	assert_equals(solve_distinct_disks(5, 2), [(0, 2), (1, 3), (2, 4)])
+	assert_equals(solve_distinct_disks(4, 3), [(1, 3), (0, 1), (2, 0), (3, 2), (1, 3), (0, 1)])
+	assert_equals(solve_distinct_disks(5, 3), [(1, 3), (2, 1), (0, 2), (2, 4), (1, 2)])
 
 if __name__ == "__main__":
+	print "Testing Section 1"
 	test_section_1()
+	print "Testing Section 2"
 	test_section_2()
+	print "Testing Section 3"
 	test_section_3()
