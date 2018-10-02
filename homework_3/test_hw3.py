@@ -28,6 +28,20 @@ def test_section_1():
 	assert_equals(p.perform_move("down"), False)
 	assert_equals(p.get_board(), [[1, 2, 3], [4, 5, 6], [7, 8, 0]])
 
+	# Is solved
+	p = TilePuzzle([[1, 2], [3, 0]])
+	assert_equals(p.is_solved(), True)
+	p = TilePuzzle([[0, 1], [3, 2]])
+	assert_equals(p.is_solved(), False)
+
+	# Copy
+	p = create_tile_puzzle(3, 3)
+	p2 = p.copy()
+	assert_equals(p.get_board(), p2.get_board())
+	p = create_tile_puzzle(3, 3)
+	p2 = p.copy()
+	p.perform_move("left")
+	assert_not_equals(p.get_board(), p2.get_board())
 
 if __name__ == "__main__":
 	test_section_1()

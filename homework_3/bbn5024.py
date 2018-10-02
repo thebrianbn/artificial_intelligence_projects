@@ -9,7 +9,8 @@ student_name = "Brian Nguyen"
 ############################################################
 
 # Include your imports here, if any are used.
-
+import random
+import copy
 
 
 ############################################################
@@ -53,7 +54,7 @@ class TilePuzzle(object):
         orig_c = self.empty_space[1]
         row = self.empty_space[0]
         col = self.empty_space[1]
-        
+
         if direction == "up":
             row -= 1
         elif direction == "down":
@@ -68,16 +69,22 @@ class TilePuzzle(object):
         else:
             self.board[orig_r][orig_c], self.board[row][col] = \
                 self.board[row][col], self.board[orig_r][orig_c]
+            self.empty_space = [row, col]
         return True
 
     def scramble(self, num_moves):
-        pass
+        possible_moves = ["up", "down", "right", "left"]
+        for i in range(num_moves):
+            self.perform_move(random.choice(possible_moves))
 
     def is_solved(self):
-        pass
+        if self.empty_space == [self.rlen - 1, self.clen - 1]:
+            return True
+        return False
 
     def copy(self):
-        pass
+        puzzle = copy.deepcopy(self.board)
+        return TilePuzzle(puzzle)
 
     def successors(self):
         pass
