@@ -17,19 +17,44 @@ student_name = "Brian Nguyen"
 ############################################################
 
 def create_tile_puzzle(rows, cols):
-    pass
+    puzzle = []
+    counter = 1
+    end = rows * cols
+    for i in range(rows):
+        temp = []
+        for j in range(cols):
+            if counter == end:
+                temp.append(0)
+            else:
+                temp.append(counter)
+            counter += 1
+        puzzle.append(temp)
+    return TilePuzzle(puzzle)
 
 class TilePuzzle(object):
     
     # Required
     def __init__(self, board):
         self.board = board
+        self.rlen = len(board)
+        self.clen = len(board[0])
+        for i in range(self.rlen):
+            for j in range(self.clen):
+                if board[i][j] == 0:
+                    self.empty_space = [i, j]
 
     def get_board(self):
         return self.board
 
     def perform_move(self, direction):
-        pass
+        if direction == "up":
+            pass
+        elif direction == "down":
+            pass
+        elif direction == "left":
+            pass
+        elif direction == "right":
+            pass
 
     def scramble(self, num_moves):
         pass
