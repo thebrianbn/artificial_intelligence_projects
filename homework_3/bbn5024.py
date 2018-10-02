@@ -38,6 +38,8 @@ class TilePuzzle(object):
         self.board = board
         self.rlen = len(board)
         self.clen = len(board[0])
+
+        # Find empty space
         for i in range(self.rlen):
             for j in range(self.clen):
                 if board[i][j] == 0:
@@ -47,14 +49,26 @@ class TilePuzzle(object):
         return self.board
 
     def perform_move(self, direction):
+        orig_r = self.empty_space[0]
+        orig_c = self.empty_space[1]
+        row = self.empty_space[0]
+        col = self.empty_space[1]
+        
         if direction == "up":
-            pass
+            row -= 1
         elif direction == "down":
-            pass
+            row += 1
         elif direction == "left":
-            pass
+            col -= 1
         elif direction == "right":
-            pass
+            col += 1
+
+        if row < 0 or row >= self.rlen or col < 0 or col >= self.clen:
+            return False
+        else:
+            self.board[orig_r][orig_c], self.board[row][col] = \
+                self.board[row][col], self.board[orig_r][orig_c]
+        return True
 
     def scramble(self, num_moves):
         pass
