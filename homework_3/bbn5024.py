@@ -73,7 +73,7 @@ class TilePuzzle(object):
         return True
 
     def scramble(self, num_moves):
-        possible_moves = ["up", "down", "right", "left"]
+        possible_moves = ["up", "down", "left", "right"]
         for i in range(num_moves):
             self.perform_move(random.choice(possible_moves))
 
@@ -87,6 +87,13 @@ class TilePuzzle(object):
         return TilePuzzle(puzzle)
 
     def successors(self):
+        possible_moves = ["up", "down", "left", "right"]
+        for move in possible_moves:
+            new_p = self.copy()
+            if new_p.perform_move(move):
+                yield move, new_p
+
+    def iddfs_helper(self, limit, moves):
         pass
 
     # Required
@@ -116,40 +123,77 @@ def solve_distinct_disks(length, n):
 ############################################################
 
 def create_dominoes_game(rows, cols):
-    pass
+    board = [[False for j in range(cols)] for i in range(rows)]
+    return DominoesGame(board)
 
 class DominoesGame(object):
 
     # Required
     def __init__(self, board):
-        pass
+        self.board = board
+        self.rlen = len(board)
+        self.clen = len(board[0])
 
     def get_board(self):
-        pass
+        return self.board
 
     def reset(self):
-        pass
+        for i in range(self.rlen):
+            for j in range(self.clen):
+                self.board[i][j] = False
 
     def is_legal_move(self, row, col, vertical):
-        pass
+
+        # Initial placement check
+        if self.board[row][col]:
+            return False
+
+        if vertical:
+            row += 1
+        else:
+            col += 1
+
+        # Adjacent placement check
+        if row >= self.rlen or col >= self.clen or self.board[row][col]:
+            return False
+
+        return True
+
 
     def legal_moves(self, vertical):
-        pass
+
+        for i in range(self.rlen):
+            for j in range(self.clen):
+                if self.is_legal_move(i, j, vertical):
+                    yield i, j
 
     def perform_move(self, row, col, vertical):
-        pass
+
+        self.board[row][col] = True
+        if vertical:
+            self.board[row + 1][col] = True
+        else:
+            self.board[row][col+1] = True
 
     def game_over(self, vertical):
-        pass
+        if list(self.legal_moves(vertical)) == []:
+            return True
+        return False
 
     def copy(self):
-        pass
+        board = copy.deepcopy(self.board)
+        return DominoesGame(board)
 
     def successors(self, vertical):
-        pass
+        moves = list(self.legal_moves(vertical))
+        for move in moves:
+            new_board = self.copy()
+            new_board.perform_move(move[0], move[1], vertical)
+            yield move, new_board
 
     def get_random_move(self, vertical):
-        pass
+        moves = list(self.legal_moves(vertical))
+        return random.choice(moves)
 
     # Required
     def get_best_move(self, vertical, limit):
