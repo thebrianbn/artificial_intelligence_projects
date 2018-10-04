@@ -34,6 +34,11 @@ def create_tile_puzzle(rows, cols):
     return TilePuzzle(puzzle)
 
 class TilePuzzle(object):
+
+    opposite = {"up": "down",
+                "down": "up",
+                "left": "right",
+                "right": "left"}
     
     # Required
     def __init__(self, board):
@@ -41,6 +46,7 @@ class TilePuzzle(object):
         self.rlen = len(board)
         self.clen = len(board[0])
         self.tile_dict = {}
+        
 
         counter = 1
         end = self.rlen * self.clen
@@ -122,11 +128,12 @@ class TilePuzzle(object):
         else:
             next_successors = list(recent_move[1].successors())
             for move in next_successors:
+                if TilePuzzle.opposite[move[0]] == recent_move[0]:
+                    continue
                 moves_copy = copy.copy(moves)
                 moves_copy.append(move)
                 for x in self.iddfs_helper(limit - 1, moves_copy):
                     yield x
-
 
     # Required
     def find_solutions_iddfs(self):
@@ -142,6 +149,8 @@ class TilePuzzle(object):
             counter += 1
 
     def get_md(self, board):
+
+        # Calculate Manhattan Distance
         md_sum = 0
         for i in range(self.rlen):
             for j in range(self.clen):
@@ -154,8 +163,6 @@ class TilePuzzle(object):
     def find_solution_a_star(self):
         pq = PriorityQueue()
 
-        memory = set()
-
         # Enqueue initial successors
         successors = self.successors()
         for move, new_p in successors:
@@ -164,19 +171,21 @@ class TilePuzzle(object):
 
         # Enqueue successors until solution is found
         while not pq.empty():
+            # Get puzzle with lowest heuristic, set variables
             puzzle = pq.get()
             md = puzzle[0]
             moves = puzzle[1][0]
             new_p = puzzle[1][1]
+
+            # Check if solved
             if new_p.is_solved():
                 return moves
-            if tuple(moves) in memory:
-                continue
-            memory.add(tuple(moves))
             
-            
+            # Add successors to priority queue
             successors = new_p.successors()
             for move, new_p in successors:
+                if TilePuzzle.opposite[move] == moves[-1]:
+                    continue
                 moves_copy = copy.copy(moves)
                 moves_copy.append(move)
                 new_md = self.get_md(new_p)
@@ -188,6 +197,9 @@ class TilePuzzle(object):
 ############################################################
 
 def find_path(start, goal, scene):
+
+    def euclid():
+        pass
     pass
 
 ############################################################
@@ -195,7 +207,12 @@ def find_path(start, goal, scene):
 ############################################################
 
 def solve_distinct_disks(length, n):
-    pass
+
+    def heuristic():
+        pass
+    pq = PriorityQueue()
+
+    state = [i if i < n + 1 else 0 for i in range(1, length + 1)]
 
 ############################################################
 # Section 4: Dominoes Game

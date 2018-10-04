@@ -78,7 +78,6 @@ def test_section_1():
 	b = [[4,1,2], [0,5,3], [7,8,6]]
 	p = TilePuzzle(b)
 	assert_equals(p.find_solution_a_star(), ['up', 'right', 'right', 'down', 'down'])
-	print p.find_solution_a_star()
 	b = [[1,2,3], [4,0,5], [6,7,8]]
 	p = TilePuzzle(b)
 	assert_equals(p.find_solution_a_star(), ['right', 'down', 'left', 'left',
