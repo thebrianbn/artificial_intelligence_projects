@@ -11,6 +11,7 @@ student_name = "Brian Nguyen"
 # Include your imports here, if any are used.
 import random
 import copy
+from Queue import PriorityQueue
 
 
 ############################################################
@@ -78,9 +79,16 @@ class TilePuzzle(object):
             self.perform_move(random.choice(possible_moves))
 
     def is_solved(self):
-        if self.empty_space == [self.rlen - 1, self.clen - 1]:
-            return True
-        return False
+        counter = 1
+        end = self.rlen * self.clen
+        for i in range(self.rlen):
+            for j in range(self.clen):
+                if counter == end and self.board[i][j] == 0:
+                    continue
+                elif self.board[i][j] != counter:
+                    return False
+                counter += 1
+        return True
 
     def copy(self):
         puzzle = copy.deepcopy(self.board)
@@ -94,11 +102,33 @@ class TilePuzzle(object):
                 yield move, new_p
 
     def iddfs_helper(self, limit, moves):
-        pass
+        recent_move = moves[-1]
+        if recent_move[1].is_solved():
+            yield map(lambda x: x[0], moves)
+
+        if limit == 0:
+            return
+        else:
+            next_successors = list(recent_move[1].successors())
+            for move in next_successors:
+                moves_copy = copy.copy(moves)
+                moves_copy.append(move)
+                for x in self.iddfs_helper(limit - 1, moves_copy):
+                    yield x
+
 
     # Required
     def find_solutions_iddfs(self):
-        pass
+        flag = False
+        counter = 0
+        while True:
+            temp = self.iddfs_helper(counter, [(None, self)])
+            for x in temp:
+                flag = True
+                yield x[1:]
+            if flag:
+                break
+            counter += 1
 
     # Required
     def find_solution_a_star(self):

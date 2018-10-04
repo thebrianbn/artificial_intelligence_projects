@@ -55,6 +55,25 @@ def test_section_1():
 	for move, new_p in p.successors():
 		print move, new_p.get_board()
 
+	# Iterative Deepening Search
+	b = [[4,1,2], [0,5,3], [7,8,6]]
+	p = TilePuzzle(b)
+	solutions = p.find_solutions_iddfs()
+	assert_equals(next(solutions), ['up', 'right', 'right', 'down', 'down'])
+
+	b = [[1,2,3], [4,0,8], [7,6,5]]
+	p = TilePuzzle(b)
+	solutions = p.find_solutions_iddfs()
+	assert_equals(list(p.find_solutions_iddfs()), [['down', 'right', 'up', 'left', 'down', 'right'], ['right', 'down', 'left', 'up', 'right', 'down']])
+
+
+def test_section_2():
+	pass
+
+
+def test_section_3():
+	pass
+
 
 def test_section_4():
 
