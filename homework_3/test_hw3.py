@@ -44,18 +44,25 @@ def test_section_1():
 	assert_not_equals(p.get_board(), p2.get_board())
 
 	# Successors
+	print("\n ### Successors ### \n")
 	p = create_tile_puzzle(3, 3)
 	for move, new_p in p.successors():
 		print move, new_p.get_board()
 
-	print("######################################")
+	print("\n ################## \n")
 
 	b = [[1,2,3], [4,0,5], [6,7,8]]
 	p = TilePuzzle(b)
 	for move, new_p in p.successors():
 		print move, new_p.get_board()
 
+	print("\n ################## \n")
+
 	# Iterative Deepening Search
+	p = create_tile_puzzle(3, 3)
+	solutions = p.find_solutions_iddfs()
+	assert_equals(list(solutions), [[]])
+
 	b = [[4,1,2], [0,5,3], [7,8,6]]
 	p = TilePuzzle(b)
 	solutions = p.find_solutions_iddfs()
@@ -64,9 +71,19 @@ def test_section_1():
 	b = [[1,2,3], [4,0,8], [7,6,5]]
 	p = TilePuzzle(b)
 	solutions = p.find_solutions_iddfs()
-	assert_equals(list(p.find_solutions_iddfs()), [['down', 'right', 'up', 'left', 'down', 'right'], ['right', 'down', 'left', 'up', 'right', 'down']])
+	assert_equals(list(p.find_solutions_iddfs()), [['down', 'right', 'up',
+		'left', 'down', 'right'], ['right', 'down', 'left', 'up', 'right', 'down']])
 
-
+	# A Star Search
+	b = [[4,1,2], [0,5,3], [7,8,6]]
+	p = TilePuzzle(b)
+	assert_equals(p.find_solution_a_star(), ['up', 'right', 'right', 'down', 'down'])
+	print p.find_solution_a_star()
+	b = [[1,2,3], [4,0,5], [6,7,8]]
+	p = TilePuzzle(b)
+	assert_equals(p.find_solution_a_star(), ['right', 'down', 'left', 'left',
+		'up','right', 'down', 'right', 'up', 'left','left', 'down', 'right',
+		'right'])
 def test_section_2():
 	pass
 
@@ -114,8 +131,10 @@ def test_section_4():
 
 	# Legal moves
 	g = create_dominoes_game(3, 3)
-	assert_equals(list(g.legal_moves(True)), [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)])
-	assert_equals(list(g.legal_moves(False)), [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)])
+	assert_equals(list(g.legal_moves(True)), [(0, 0), (0, 1), (0, 2), (1, 0),
+		(1, 1), (1, 2)])
+	assert_equals(list(g.legal_moves(False)), [(0, 0), (0, 1), (1, 0), (1, 1),
+		(2, 0), (2, 1)])
 	b = [[True, False], [True, False]]
 	g = DominoesGame(b)
 	assert_equals(list(g.legal_moves(True)), [(0, 1)])
@@ -124,10 +143,12 @@ def test_section_4():
 	# Perform move
 	g = create_dominoes_game(3, 3)
 	g.perform_move(0, 1, True)
-	assert_equals(g.get_board(), [[False, True, False], [False, True, False], [False, False, False]])
+	assert_equals(g.get_board(), [[False, True, False], [False, True, False],
+		[False, False, False]])
 	g = create_dominoes_game(3, 3)
 	g.perform_move(1, 0, False)
-	assert_equals(g.get_board(), [[False, False, False], [True, True, False], [False, False, False]])
+	assert_equals(g.get_board(), [[False, False, False], [True, True, False],
+		[False, False, False]])
 
 	# Game over
 	b = [[False, False], [False, False]]
@@ -160,5 +181,7 @@ def test_section_4():
 		print m, new_g.get_board()
 
 if __name__ == "__main__":
+	print "\n########## Testing Section 1 ##########\n"
 	test_section_1()
+	print "\n########## Testing Section 4 ##########\n"
 	test_section_4()

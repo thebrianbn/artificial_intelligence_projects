@@ -40,6 +40,17 @@ class TilePuzzle(object):
         self.board = board
         self.rlen = len(board)
         self.clen = len(board[0])
+        self.tile_dict = {}
+
+        counter = 1
+        end = self.rlen * self.clen
+        for i in range(self.rlen):
+            for j in range(self.clen):
+                if counter == end:
+                    self.tile_dict[0] = (i, j)
+                else:
+                    self.tile_dict[counter] = (i, j)
+                counter += 1
 
         # Find empty space
         for i in range(self.rlen):
@@ -130,9 +141,47 @@ class TilePuzzle(object):
                 break
             counter += 1
 
+    def get_md(self, board):
+        md_sum = 0
+        for i in range(self.rlen):
+            for j in range(self.clen):
+                tile = board.board[i][j]
+                solved_location = self.tile_dict[tile]
+                md_sum += abs(i - solved_location[0]) + abs(j - solved_location[1])
+        return md_sum
+
     # Required
     def find_solution_a_star(self):
-        pass
+        pq = PriorityQueue()
+
+        memory = set()
+
+        # Enqueue initial successors
+        successors = self.successors()
+        for move, new_p in successors:
+            md = self.get_md(new_p)
+            pq.put((md, ([move], new_p)))
+
+        # Enqueue successors until solution is found
+        while not pq.empty():
+            puzzle = pq.get()
+            md = puzzle[0]
+            moves = puzzle[1][0]
+            new_p = puzzle[1][1]
+            if new_p.is_solved():
+                return moves
+            if tuple(moves) in memory:
+                continue
+            memory.add(tuple(moves))
+            
+            
+            successors = new_p.successors()
+            for move, new_p in successors:
+                moves_copy = copy.copy(moves)
+                moves_copy.append(move)
+                new_md = self.get_md(new_p)
+                pq.put((md + new_md, (moves_copy, new_p)))
+
 
 ############################################################
 # Section 2: Grid Navigation
