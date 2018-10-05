@@ -11,6 +11,7 @@ student_name = "Brian Nguyen"
 # Include your imports here, if any are used.
 import random
 import copy
+import math
 from Queue import PriorityQueue
 
 
@@ -198,9 +199,80 @@ class TilePuzzle(object):
 
 def find_path(start, goal, scene):
 
-    def euclid():
-        pass
-    pass
+    rlen = len(scene)
+    clen = len(scene[0])
+
+    def successors(point):
+        x, y = point
+        succ = []
+
+        #Up
+        if x - 1 >= 0 and not scene[x-1][y]:
+            succ.append((x-1, y))
+
+        # Down
+        if x + 1 < rlen and not scene[x+1][y]:
+            succ.append((x+1, y))
+
+        # Left
+        if y - 1 >= 0 and not scene[x][y-1]:
+            succ.append((x, y-1))
+
+        # Right
+        if y + 1 < clen and not scene[x][y+1]:
+            succ.append((x-1, y-1))
+
+        # Up-left
+        if x - 1 >= 0 and y - 1 >= 0 and not scene[x-1][y-1]:
+            succ.append((x-1, y-1))
+
+        # Up-right
+        if x - 1 >= 0 and y + 1 < clen and not scene[x-1][y+1]:
+            succ.append((x-1, y+1))
+
+        # Down-left
+        if x + 1 < rlen and y - 1 >= 0 and not scene[x+1][y-1]:
+            succ.append((x+1, y-1))
+
+        # Down-right
+        if x + 1 < rlen and y + 1 < clen and not scene[x+1][y+1]:
+            succ.append((x+1, y+1))
+
+        return succ
+
+    def euclid(start, end):
+        return math.sqrt((start[0] - end[0]) ** 2 + (start[1] - end[1]) ** 2)
+
+    # Handle obstacle at start or goal
+    if scene[start[0]][start[1]] or scene[goal[0]][goal[1]]:
+        return None
+
+    # Get lengths
+    rlen = len(scene)
+    clen = len(scene[0])
+    pq = PriorityQueue()
+
+    # Enqueue initial successors
+    succ = successors(start)
+    for s in succ:
+        euc = euclid(s, goal)
+        pq.put((euc, [start, s]))
+
+    # Enqueue successors until solution is found
+    while not pq.empty():
+        euc, path = pq.get()
+        if path[-1] == goal:
+            return path
+        
+        succ = successors(path[-1])
+        for s in succ:
+            if s == path[-2]:
+                continue
+            new_euc = euclid(s, goal)
+            path_copy = copy.copy(path)
+            path_copy.append(s)
+            pq.put((euc + new_euc, path_copy))
+    return None
 
 ############################################################
 # Section 3: Linear Disk Movement, Revisited
@@ -254,7 +326,6 @@ class DominoesGame(object):
             return False
 
         return True
-
 
     def legal_moves(self, vertical):
 

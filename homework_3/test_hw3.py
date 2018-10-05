@@ -83,9 +83,14 @@ def test_section_1():
 	assert_equals(p.find_solution_a_star(), ['right', 'down', 'left', 'left',
 		'up','right', 'down', 'right', 'up', 'left','left', 'down', 'right',
 		'right'])
-def test_section_2():
-	pass
 
+
+def test_section_2():
+	
+	scene = [[False, False, False], [False, True , False], [False, False, False]]
+	assert_equals(find_path((0, 0), (2, 1), scene), [(0, 0), (1, 0), (2, 1)])
+	scene = [[False, True, False], [False, True, False], [False, True, False]]
+	assert_equals(find_path((0, 0), (0, 2), scene), None)
 
 def test_section_3():
 	pass
@@ -182,5 +187,7 @@ def test_section_4():
 if __name__ == "__main__":
 	print "\n########## Testing Section 1 ##########\n"
 	test_section_1()
+	print "\n########## Testing Section 2 ##########\n"
+	test_section_2()
 	print "\n########## Testing Section 4 ##########\n"
 	test_section_4()

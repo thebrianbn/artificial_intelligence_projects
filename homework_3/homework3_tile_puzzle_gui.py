@@ -1,7 +1,7 @@
 import sys
 import Tkinter
 
-import homework3
+import bbn5024
 
 class Tile(Tkinter.Canvas):
 
@@ -73,7 +73,7 @@ class TilePuzzleGUI(Tkinter.Frame):
 
         self.rows = rows
         self.cols = cols
-        self.puzzle = homework3.create_tile_puzzle(rows, cols)
+        self.puzzle = bbn5024.create_tile_puzzle(rows, cols)
 
         self.board = Board(self, self.puzzle, rows, cols)
         self.board.pack(side=Tkinter.LEFT, padx=1, pady=1)
