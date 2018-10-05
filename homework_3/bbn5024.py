@@ -220,7 +220,7 @@ def find_path(start, goal, scene):
 
         # Right
         if y + 1 < clen and not scene[x][y+1]:
-            succ.append((x-1, y-1))
+            succ.append((x, y+1))
 
         # Up-left
         if x - 1 >= 0 and y - 1 >= 0 and not scene[x-1][y-1]:
@@ -371,19 +371,14 @@ class DominoesGame(object):
 ############################################################
 
 feedback_question_1 = """
-Type your response here.
-Your response may span multiple lines.
-Do not include these instructions in your response.
+6 hours.
 """
 
 feedback_question_2 = """
-Type your response here.
-Your response may span multiple lines.
-Do not include these instructions in your response.
+I found programming IDDFS and A* Star Search challenging at first.
+No significant stumbling blocks.
 """
 
 feedback_question_3 = """
-Type your response here.
-Your response may span multiple lines.
-Do not include these instructions in your response.
+I liked all of the sections.
 """
