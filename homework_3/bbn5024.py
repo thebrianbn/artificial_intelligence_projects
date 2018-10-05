@@ -280,11 +280,73 @@ def find_path(start, goal, scene):
 
 def solve_distinct_disks(length, n):
 
-    def heuristic():
-        pass
-    pq = PriorityQueue()
-
+    solution = [j if i > length - n else 0 for i, j in enumerate(range(length, 0, -1), 1)]
     state = [i if i < n + 1 else 0 for i in range(1, length + 1)]
+
+    def successors(current):
+        pass
+
+    def heuristic(board):
+        total = 0
+        for i in range(length):
+            if board[i] != 0:
+                total += abs(i - solution.index(board[i]))
+        return total
+
+    pq = PriorityQueue()
+    pq.put((0, ([], state)))
+
+    while not pq.empty():
+        cost, state = pq.get()
+        moves, current = state
+        if current == solution:
+            return moves
+        for i in range(length):
+            if i < length - 1:
+                if current[i + 1] == 0 and current[i] != 0:
+                    one_hop = copy.copy(current)
+                    temp = one_hop[i]
+                    one_hop[i] = 0
+                    one_hop[i + 1] = temp
+                    new_moves1 = copy.deepcopy(moves)
+                    new_moves1.append((i, i + 1))
+                    new_cost = heuristic(one_hop)
+                    pq.put((cost + new_cost, (new_moves1, one_hop)))
+            if i < length - 2:  # Prevent index error
+                if current[i + 2] == 0 and current[i + 1] != 0 and \
+                current[i] != 0:
+                    two_hop = copy.copy(current)
+                    temp = two_hop[i]
+                    two_hop[i] = 0
+                    two_hop[i + 2] = temp
+                    new_moves2 = copy.deepcopy(moves)
+                    new_moves2.append((i, i + 2))
+                    new_cost = heuristic(two_hop)
+                    pq.put((cost + new_cost, (new_moves2, two_hop)))
+            if i > 0:
+                if current[i - 1] == 0 and current[i] != 0:
+                    one_back = copy.copy(current)
+                    temp = one_back[i]
+                    one_back[i] = 0
+                    one_back[i - 1] = temp
+                    new_moves3 = copy.deepcopy(moves)
+                    new_moves3.append((i, i - 1))
+                    new_cost = heuristic(two_hop)
+                    pq.put((cost + new_cost, (new_moves3, one_back)))
+            if i > 1:
+                if current[i - 2] == 0 and current[i - 1] != 0 and \
+                current[i] != 0:
+                    two_back = copy.copy(current)
+                    temp = two_back[i]
+                    two_back[i] = 0
+                    two_back[i - 2] = temp
+                    new_moves4 = copy.deepcopy(moves)
+                    new_moves4.append((i, i - 2))
+                    new_cost = heuristic(two_hop)
+                    pq.put((cost + new_cost,(new_moves4, two_back)))
+    return None
+
+    
 
 ############################################################
 # Section 4: Dominoes Game

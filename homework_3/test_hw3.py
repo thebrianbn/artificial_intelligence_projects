@@ -93,7 +93,11 @@ def test_section_2():
 	assert_equals(find_path((0, 0), (0, 2), scene), None)
 
 def test_section_3():
-	pass
+
+	assert_equals(solve_distinct_disks(4, 2), [(0, 2), (2, 3), (1, 2)])
+	assert_equals(solve_distinct_disks(5, 2), [(0, 2), (1, 3), (2, 4)])
+	assert_equals(solve_distinct_disks(4, 3), [(1, 3), (0, 1), (2, 0), (3, 2), (1, 3), (0, 1)])
+	assert_equals(solve_distinct_disks(5, 3), [(1, 3), (2, 1), (0, 2), (2, 4), (1, 2)])
 
 
 def test_section_4():
@@ -184,10 +188,13 @@ def test_section_4():
 	for m, new_g in g.successors(True):
 		print m, new_g.get_board()
 
+
 if __name__ == "__main__":
 	print "\n########## Testing Section 1 ##########\n"
 	test_section_1()
 	print "\n########## Testing Section 2 ##########\n"
 	test_section_2()
+	print "\n########## Testing Section 3 ##########\n"
+	test_section_3()
 	print "\n########## Testing Section 4 ##########\n"
 	test_section_4()
