@@ -195,7 +195,9 @@ def test_section_4():
 	b = [[False] * 3 for i in range(3)]
 	g = DominoesGame(b)
 	g.perform_move(0, 1, True)
+	print(g.get_board())
 	print(g.get_best_move(False, 1))
+	print(g.get_board())
 	print(g.get_best_move(False, 2))
 
 if __name__ == "__main__":

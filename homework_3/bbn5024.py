@@ -424,8 +424,6 @@ class DominoesGame(object):
 
     # Required
     def get_best_move(self, vertical, limit):
-
-        counter = 0
         
         def eval(state):
             player_moves = len(list(state.legal_moves(vertical)))
@@ -433,14 +431,14 @@ class DominoesGame(object):
             return player_moves - oppenent_moves
 
         def ab_search(state):
-            v = max_value(state, float("inf"), float("-inf"), limit)
+            v = max_value(state, float("-inf"), float("inf"), limit)
             for move, new_board in state.successors(vertical):
                 if eval(new_board) == v:
-                    return move, v, counter
+                    return move, eval(new_board)
 
         def max_value(state, a, b, limit):
 
-            if limit <= 0 or state.game_over(vertical):
+            if limit == 0 or state.game_over(vertical):
                 print "Limit:", limit
                 return eval(state)
             v = float("-inf")
@@ -453,7 +451,7 @@ class DominoesGame(object):
 
         def min_value(state, a, b, limit):
 
-            if limit <= 0 or state.game_over(vertical):
+            if limit == 0 or state.game_over(vertical):
                 print "Limit:", limit
                 return eval(state)
             v = float("inf")
