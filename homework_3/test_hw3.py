@@ -188,6 +188,15 @@ def test_section_4():
 	for m, new_g in g.successors(True):
 		print m, new_g.get_board()
 
+	b = [[False] * 3 for i in range(3)]
+	g = DominoesGame(b)
+	print(g.get_best_move(True, 1))
+	print(g.get_best_move(True, 2))
+	b = [[False] * 3 for i in range(3)]
+	g = DominoesGame(b)
+	g.perform_move(0, 1, True)
+	print(g.get_best_move(False, 1))
+	print(g.get_best_move(False, 2))
 
 if __name__ == "__main__":
 	print "\n########## Testing Section 1 ##########\n"

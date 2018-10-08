@@ -347,7 +347,6 @@ def solve_distinct_disks(length, n):
     return None
 
     
-
 ############################################################
 # Section 4: Dominoes Game
 ############################################################
@@ -414,8 +413,7 @@ class DominoesGame(object):
         return DominoesGame(board)
 
     def successors(self, vertical):
-        moves = list(self.legal_moves(vertical))
-        for move in moves:
+        for move in self.legal_moves(vertical):
             new_board = self.copy()
             new_board.perform_move(move[0], move[1], vertical)
             yield move, new_board
@@ -426,7 +424,47 @@ class DominoesGame(object):
 
     # Required
     def get_best_move(self, vertical, limit):
-        pass
+
+        counter = 0
+        
+        def eval(state):
+            player_moves = len(list(state.legal_moves(vertical)))
+            oppenent_moves = len(list(state.legal_moves(not vertical)))
+            return player_moves - oppenent_moves
+
+        def ab_search(state):
+            v = max_value(state, float("inf"), float("-inf"), limit)
+            for move, new_board in state.successors(vertical):
+                if eval(new_board) == v:
+                    return move, v, counter
+
+        def max_value(state, a, b, limit):
+
+            if limit <= 0 or state.game_over(vertical):
+                print "Limit:", limit
+                return eval(state)
+            v = float("-inf")
+            for new_state in state.successors(vertical):
+                v = max([v, min_value(new_state[1], a, b, limit - 1)])
+                if v >= b:
+                    return v
+                a = max([a, v])
+            return v
+
+        def min_value(state, a, b, limit):
+
+            if limit <= 0 or state.game_over(vertical):
+                print "Limit:", limit
+                return eval(state)
+            v = float("inf")
+            for new_state in state.successors(vertical):
+                v = min([v, max_value(new_state[1], a, b, limit - 1)])
+                if v <= a:
+                    return v
+                b = min([b, v])
+            return v
+
+        return ab_search(self)
 
 ############################################################
 # Section 5: Feedback
