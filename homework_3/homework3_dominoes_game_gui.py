@@ -1,7 +1,7 @@
 import sys
 import Tkinter
 
-import homework3
+import bbn5024
 
 class Square(Tkinter.Canvas):
 
@@ -58,7 +58,7 @@ class DominoesGUI(Tkinter.Frame):
 
         Tkinter.Frame.__init__(self, master)
 
-        self.game = homework3.create_dominoes_game(rows, cols)
+        self.game = bbn5024.create_dominoes_game(rows, cols)
         self.rows = rows
         self.cols = cols
 

@@ -165,8 +165,7 @@ class TilePuzzle(object):
         pq = PriorityQueue()
 
         # Enqueue initial successors
-        successors = self.successors()
-        for move, new_p in successors:
+        for move, new_p in self.successors():
             md = self.get_md(new_p)
             pq.put((md, ([move], new_p)))
 
@@ -183,8 +182,7 @@ class TilePuzzle(object):
                 return moves
             
             # Add successors to priority queue
-            successors = new_p.successors()
-            for move, new_p in successors:
+            for move, new_p in new_p.successors():
                 if TilePuzzle.opposite[move] == moves[-1]:
                     continue
                 moves_copy = copy.copy(moves)
@@ -419,8 +417,7 @@ class DominoesGame(object):
             yield move, new_board
 
     def get_random_move(self, vertical):
-        moves = list(self.legal_moves(vertical))
-        return random.choice(moves)
+        return random.choice(list(self.legal_moves(vertical)))
 
     # Required
     def get_best_move(self, vertical, limit):
@@ -431,45 +428,53 @@ class DominoesGame(object):
             return player_moves - oppenent_moves
 
         def ab_search(state):
-            v = max_value(state, float("-inf"), float("inf"), limit)
-            for move, new_board in state.successors(vertical):
-                if eval(new_board) == v:
-                    return move, eval(new_board)
+            v = max_value(state, float("-inf"), float("inf"), limit, vertical, 0)
+            return tuple(v)
 
-        def max_value(state, a, b, limit):
+        def max_value(state, a, b, limit, vertical, counter):
+            new_move = state[0]
+            new_state = state[1]
 
-            if limit == 0 or state.game_over(vertical):
-                print "Limit:", limit
-                return eval(state)
-            v = float("-inf")
-            for new_state in state.successors(vertical):
-                v = max([v, min_value(new_state[1], a, b, limit - 1)])
-                if v >= b:
+            if limit == 0 or new_state.game_over(vertical):
+                return new_move, eval(new_state), counter + 1
+            v = [None, float("-inf"), None]
+            for new_state in new_state.successors(vertical):
+                move, eval_metric, counter = min_value(new_state, a, b, limit - 1, not vertical, counter)
+                if eval_metric > v[1]:
+                    v = [new_state[0], eval_metric, counter]
+                else:
+                    v[2] = counter
+                if v[1] >= b:
                     return v
-                a = max([a, v])
+                a = max([a, v[1]])
             return v
 
-        def min_value(state, a, b, limit):
+        def min_value(state, a, b, limit, vertical, counter):
+            new_move = state[0]
+            new_state = state[1]
 
-            if limit == 0 or state.game_over(vertical):
-                print "Limit:", limit
-                return eval(state)
-            v = float("inf")
-            for new_state in state.successors(vertical):
-                v = min([v, max_value(new_state[1], a, b, limit - 1)])
-                if v <= a:
+            if limit == 0 or new_state.game_over(vertical):
+                return new_move, eval(new_state), counter + 1
+            v = None, float("inf"), None
+            for new_state in new_state.successors(vertical):
+                move, eval_metric, counter = max_value(new_state, a, b, limit - 1, not vertical, counter)
+                if eval_metric < v[1]:
+                    v = [new_state[0], eval_metric, counter]
+                else:
+                    v[2] = counter
+                if v[1] <= a:
                     return v
-                b = min([b, v])
+                b = min([b, v[1]])
             return v
 
-        return ab_search(self)
+        return ab_search((None, self))
 
 ############################################################
 # Section 5: Feedback
 ############################################################
 
 feedback_question_1 = """
-6 hours.
+10 hours.
 """
 
 feedback_question_2 = """

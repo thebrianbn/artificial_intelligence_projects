@@ -190,15 +190,13 @@ def test_section_4():
 
 	b = [[False] * 3 for i in range(3)]
 	g = DominoesGame(b)
-	print(g.get_best_move(True, 1))
-	print(g.get_best_move(True, 2))
+	assert_equals(g.get_best_move(True, 1), ((0, 1), 2, 6))
+	assert_equals(g.get_best_move(True, 2), ((0, 1), 3, 10))
 	b = [[False] * 3 for i in range(3)]
 	g = DominoesGame(b)
 	g.perform_move(0, 1, True)
-	print(g.get_board())
-	print(g.get_best_move(False, 1))
-	print(g.get_board())
-	print(g.get_best_move(False, 2))
+	assert_equals(g.get_best_move(False, 1), ((2, 0), -3, 2))
+	assert_equals(g.get_best_move(False, 2), ((2, 0), -2, 5))
 
 if __name__ == "__main__":
 	print "\n########## Testing Section 1 ##########\n"
