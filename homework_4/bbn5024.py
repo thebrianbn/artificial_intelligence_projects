@@ -20,6 +20,7 @@ from copy import deepcopy
 def sudoku_cells():
     return [(i, j) for i in range(9) for j in range(9)]
 
+
 def sudoku_arcs():
 
     arcs = []
@@ -40,6 +41,7 @@ def sudoku_arcs():
                         if ((r, c), (k, l)) not in arcs and (r, c) != (k, l)]
     return arcs
 
+
 def read_board(path):
 
     board = {}
@@ -55,7 +57,9 @@ def read_board(path):
                     board[(i, j)] = set([int(char)])
     return board
 
+
 def create_arc_table(arcs):
+
     arc_table = {}
     for a in arcs:
         if a[1] not in arc_table:
@@ -119,7 +123,6 @@ class Sudoku(object):
                     return
                 # Enqueue all possibly affected arcs
                 [q.put(a) for a in Sudoku.ARC_TABLE[cell1]]
-
 
     def infer_improved(self):
 
@@ -187,7 +190,6 @@ class Sudoku(object):
                 flag = True
                 [q.put(c) for c in Sudoku.CELLS]
                 #[q.put(c[0]) for c in Sudoku.ARC_TABLE[cell]]
-
 
     def infer_with_guessing(self):
 
