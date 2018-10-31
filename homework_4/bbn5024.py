@@ -1,7 +1,6 @@
 ############################################################
 # CMPSC442: Homework 4
 ############################################################
-from __future__ import print_function
 student_name = "Brian Nguyen"
 
 ############################################################
@@ -90,15 +89,6 @@ class Sudoku(object):
 
         # Return the possible values at a particular cell
         return self.board[cell]
-
-    def print_board(self):
-        for i in range(9):
-            for j in range(9):
-                if len(self.board[(i, j)]) == 1:
-                    print(list(self.board[(i, j)])[0], end="")
-                else:
-                    print("*", end="")
-            print()
 
     def remove_inconsistent_values(self, cell1, cell2):
 
