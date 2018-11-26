@@ -2,25 +2,49 @@
 # CMPSC 442: Homework 6
 ############################################################
 
-student_name = "Type your full name here."
+student_name = "Brian Nguyen"
 
 ############################################################
 # Imports
 ############################################################
 
 # Include your imports here, if any are used.
-
-
+import string
+import re
 
 ############################################################
 # Section 1: Markov Models
 ############################################################
 
 def tokenize(text):
-    pass
+    
+    space = False
+    tokens = []
+    current = ""
+
+    for char in text:
+        if char in string.punctuation:
+            if len(current) != 0:
+                tokens.append(current)
+            tokens.append(char)
+            current = ""
+        elif char.isspace():
+            space = True
+        elif space:
+            space = False
+            if len(current) != 0:
+                tokens.append(current)
+            current = char
+        else:
+            current += char
+    if len(current) != 0:
+        tokens.append(current)
+
+    return tokens
 
 def ngrams(n, tokens):
     pass
+
 
 class NgramModel(object):
 
