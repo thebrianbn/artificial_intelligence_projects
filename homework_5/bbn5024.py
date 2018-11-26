@@ -77,10 +77,7 @@ class SpamFilter(object):
         self.ham_prob = log(len(ham_paths) / (len(spam_paths) + len(ham_paths) * 1.0))
 
         self.spam_logs = log_probs(spam_paths, smoothing)
-        self.ham_logs = log_probs(ham_paths, smoothing)
-
-        self.spam_token_counts = get_token_counts(spam_paths)
-        self.ham_token_counts = get_token_counts(ham_paths)      
+        self.ham_logs = log_probs(ham_paths, smoothing)   
     
     def is_spam(self, email_path):
 
@@ -109,47 +106,49 @@ class SpamFilter(object):
     def most_indicative_spam(self, n):
 
         indicative_tuple = []
-        token_length = len(self.spam_logs)
         
-        for token, count in self.spam_token_counts.items():
-            word_prob = log(1.0 * count / token_length)
-            indicative_tuple.append((token, self.spam_logs[token] / word_prob))
+        for token, log_prob in self.ham_logs.items():
+            if token in self.spam_logs:
+                denominator = exp(1) ** self.ham_logs[token] + exp(1) ** self.spam_logs[token]
+            else:
+                denominator = exp(1) ** self.ham_logs[token] + exp(1) ** self.spam_logs["<UNK>"]
 
-        indicative_tuple.sort(key=lambda x: x[1], reverse=True)
+            indicative_tuple.append((token, log_prob - log(denominator)))
+
+        indicative_tuple.sort(key=lambda x: x[1], reverse=False)
 
         return list(map(lambda x: x[0], indicative_tuple))[:n]
 
     def most_indicative_ham(self, n):
         
         indicative_tuple = []
-        token_length = len(self.ham_logs)
         
-        for token, count in self.ham_token_counts.items():
-            word_prob = log(1.0 * count / token_length)
-            indicative_tuple.append((token, self.ham_logs[token] / word_prob))
+        for token, log_prob in self.spam_logs.items():
+            if token in self.ham_logs:
+                denominator = exp(1) ** self.spam_logs[token] + exp(1) ** self.ham_logs[token]
+            else:
+                denominator = exp(1) ** self.spam_logs[token] + exp(1) ** self.ham_logs["<UNK>"]
 
-        indicative_tuple.sort(key=lambda x: x[1], reverse=True)
+            indicative_tuple.append((token, log_prob - log(denominator)))
+
+        indicative_tuple.sort(key=lambda x: x[1], reverse=False)
 
         return list(map(lambda x: x[0], indicative_tuple))[:n]
+        
 
 ############################################################
 # Section 2: Feedback
 ############################################################
 
 feedback_question_1 = """
-Type your response here.
-Your response may span multiple lines.
-Do not include these instructions in your response.
+6 hours.
 """
 
 feedback_question_2 = """
-Type your response here.
-Your response may span multiple lines.
-Do not include these instructions in your response.
+Classifying documents was tricky at first.
 """
 
 feedback_question_3 = """
-Type your response here.
-Your response may span multiple lines.
-Do not include these instructions in your response.
+Classifying documents was enjoyable. I would make the forumlas more clear
+since doing them in log space was tricky.
 """
