@@ -43,13 +43,24 @@ def tokenize(text):
     return tokens
 
 def ngrams(n, tokens):
-    pass
 
+    all_ngrams = []
+    tokens.append("<END>")
+    context = tuple("<START>" for i in range(n - 1))
+    
+    for token in tokens:
+        all_ngrams.append((context, token))
+        if n == 1:
+            continue
+        else:
+            context = context[n-(n-1):] + (token, )
+
+    return all_ngrams
 
 class NgramModel(object):
 
     def __init__(self, n):
-        pass
+        self.n = n
 
     def update(self, sentence):
         pass
