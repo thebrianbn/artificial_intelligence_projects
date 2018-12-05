@@ -10,7 +10,7 @@ student_name = "Brian Nguyen"
 
 # Include your imports here, if any are used.
 import string
-import re
+from math import exp, log
 import random
 
 ############################################################
@@ -43,6 +43,7 @@ def tokenize(text):
 
     return tokens
 
+
 def ngrams(n, tokens):
 
     all_ngrams = []
@@ -56,6 +57,7 @@ def ngrams(n, tokens):
 
     return all_ngrams
 
+
 class NgramModel(object):
 
     def __init__(self, n):
@@ -64,7 +66,6 @@ class NgramModel(object):
         self.all_ngrams = {}
 
         # Used to increase efficiency of n = 1 models
-        self.one_gram_dict = {}
         self.one_gram_set = set()
         self.needs_sort = False
 
@@ -75,47 +76,42 @@ class NgramModel(object):
 
         for context, token in new_ngrams:
 
-            if self.n == 1:
-                if token in self.one_gram_dict:
-                    self.one_gram_dict[token] += 1
+            if context in self.all_ngrams:
+                if token in self.all_ngrams[context]:
+                    self.all_ngrams[context][token] += 1
                 else:
-                    self.one_gram_dict[token] = 1
+                    self.all_ngrams[context][token] = 1
             else:
-                if context in self.all_ngrams:
-                    self.all_ngrams[context].append(token)
-                else:
-                    self.all_ngrams[context] = [token]
+                self.all_ngrams[context] = {token: 1}
 
         if self.n == 1:
             self.needs_sort = True
 
     def prob(self, context, token):
 
-        # If one gram, simply get probability from count of of tokens in dict
-        if self.n == 1:
-            return 1.0 * self.one_gram_dict[token] / sum(self.one_gram_dict.values())
+        if token not in self.all_ngrams[context]:
+            return 0.0
 
-        count = 0
-        total = len(self.all_ngrams[context])
-        
-        for ngram in self.all_ngrams[context]:
-            if token == ngram:
-                count += 1
+        count = self.all_ngrams[context][token]
+        total = sum(self.all_ngrams[context].values())
 
         return 1.0 * count / total
 
     def random_token(self, context):
+
+        if context not in self.all_ngrams:
+            return None
         
         r = random.random()
 
         if self.n == 1 and self.needs_sort:
-            self.one_gram_set = sorted(set(self.one_gram_dict.keys()))
+            self.one_gram_set = sorted(set(self.all_ngrams[context].keys()))
             tokens = self.one_gram_set
             self.needs_sort = False
         elif self.n == 1:
             tokens = self.one_gram_set
         else:
-            tokens = sorted(set(self.all_ngrams[context]))
+            tokens = sorted(set(self.all_ngrams[context].keys()))
 
         prob_sum = 0
 
@@ -144,12 +140,16 @@ class NgramModel(object):
 
     def perplexity(self, sentence):
         
-        tokens = tokenize(text)
-        prev = "<START>"
+        tokens = tokenize(sentence)
+        all_ngrams = ngrams(self.n, tokens)
+        
+        return exp(-sum(log(self.prob(context, token))
+            for context, token in all_ngrams) / len(all_ngrams))
 
 def create_ngram_model(n, path):
 
     model = NgramModel(n)
+
     with open(path, "r") as f:
         for line in f:
             model.update(line)

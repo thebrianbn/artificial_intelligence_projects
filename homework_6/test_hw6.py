@@ -82,6 +82,20 @@ def test_section_6():
 	m = create_ngram_model(4, "frankenstein.txt")
 	print m.random_text(15)
 
+
+def test_section_7():
+
+	m = NgramModel(1)
+	m.update("a b c d")
+	m.update("a b a b")
+	assert_equals(m.perplexity("a b"), 3.8157141418444396)
+
+	m = NgramModel(2)
+	m.update("a b c d")
+	m.update("a b a b")
+	assert_equals(m.perplexity("a b"), 1.4422495703074085)
+
+
 if __name__ == "__main__":
 
 	test_section_1()
@@ -90,3 +104,4 @@ if __name__ == "__main__":
 	test_section_4()
 	test_section_5()
 	test_section_6()
+	test_section_7()
